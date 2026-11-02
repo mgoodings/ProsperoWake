@@ -172,6 +172,50 @@ The packaging script creates an archive locally; it does not tag, push or upload
 Publish the corresponding source and dependency patches with the release.
 GitHub's automatic source archives do not include submodule contents.
 
+### Publish and update the catalog
+
+Publish the release with its existing ZIP and reviewed release notes. Verify
+that GitHub marks it as published, that the asset upload is complete, and that
+the release asset's SHA-256 matches the local ZIP. Keep published assets and
+release tags unchanged after the catalog pins them.
+
+Update only `apps/PPSA99309-mgoodings.json` in a pull request to
+[ps5-homebrew-catalog](https://github.com/darkxex/ps5-homebrew-catalog): set
+`version` to the release tag, update `artifact_url` and `sha256` from the
+published asset, and pin `icon_url` to the new tag. The unsuffixed
+`PPSA99309.json` belongs to PS5_SwitchWaker. From the catalog checkout, run
+`python3 -m catalog check` and
+`python3 -m catalog verify PPSA99309-mgoodings`; review the reported content
+version as well as the pass/fail result. After merge, verify the deployed
+listing and API; a merged PR does not mean the website has finished deploying.
+
+### Follow-up before the next release: catalog content version
+
+Build 76 ships `01.000.076` in the ZIP's `PPSA99309/sce_sys/param.json`,
+but the committed `ps5/sce_sys/param.json` at `build-76` still contains
+`01.000.028`. The build script treats the committed file as a template and
+increments a generated copy in the build directory; packaging uses that copy.
+
+The catalog reads the repository's `sce_sys/param.json` at the release tag
+before trying the ZIP. Its verification for Build 76 reported `01.000.028`.
+The ProsperoStore website successfully lists Build 76; the effect of this
+metadata mismatch on console update detection has not been verified.
+Keep the published Build 76 ZIP and tag unchanged.
+
+Before the next release:
+
+- Fix the version workflow so catalog metadata reflects the packaged version.
+  Account for the build script incrementing its generated version; updating
+  the template alone does not guarantee that the next package matches it.
+- Add a release check that compares the catalog-resolved content version with
+  the ZIP's `contentVersion` and rejects a mismatch. A passing catalog check
+  alone is insufficient: Build 76 passed while reporting the template version.
+- Verify the release tag, ZIP metadata and menu agree, and that the content
+  version is higher than the previous package's version.
+- After the catalog update is merged and deployed, check the live store API's
+  `version` and `content_version` separately, and confirm update detection on
+  a console with the previous release installed.
+
 ## Other tools
 
 - `build-runner.sh <lima-instance>` starts an optional build runner from macOS.

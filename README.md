@@ -15,6 +15,9 @@ adapted from [Bluewake](https://github.com/chrissotraidis/bluewake) and
 Plays both USA and PAL game images, with PlayStation button prompts
 and an options menu designed for the DualSense. This project targets PS5 only.
 
+Available on [ProsperoStore](https://prosperostore.net/app/PPSA99309-mgoodings/) or from
+[GitHub Releases](https://github.com/mgoodings/ProsperoWake/releases/latest).
+
 For HD textures, we recommend **[Henriko Magnifico’s Wind Waker 4K](https://www.henrikomagnifico.com/wind-waker-4k)**.
 The texture pack is downloaded separately. You supply your own game image.
 
